@@ -51,6 +51,7 @@ class General extends React.Component {
       base_path: "",
       login_type: false,
       plexPopular: false,
+      localLogin: true,
       token: false,
     };
 
@@ -60,6 +61,7 @@ class General extends React.Component {
     this.saveBasePath = this.saveBasePath.bind(this);
     this.saveLoginType = this.saveLoginType.bind(this);
     this.savePlexPopular = this.savePlexPopular.bind(this);
+    this.saveLocalLogin = this.saveLocalLogin.bind(this);
     this.testPlex = this.testPlex.bind(this);
   }
 
@@ -136,6 +138,24 @@ class General extends React.Component {
     }
   }
 
+  async saveLocalLogin() {
+    try {
+      await Api.updateConfig({
+        localLogin: this.state.localLogin
+      });
+      this.props.msg({
+        message: "Local Login Setting Saved",
+        type: "good",
+      });
+    } catch (err) {
+      console.log(err);
+      this.props.msg({
+        message: "Failed to Save Local Login Setting",
+        type: "error",
+      });
+    }
+  }
+
   async loadConfigs() {
     try {
       let config = await Api.getConfig();
@@ -147,6 +167,9 @@ class General extends React.Component {
             ? true
             : config.plexPopular,
         loading: false,
+        localLogin: config.localLogin === null || config.localLogin === undefined
+            ? true
+            : config.localLogin,
       });
       this.props.msg({
         message: "Config Loaded",
@@ -299,6 +322,24 @@ class General extends React.Component {
             <p>Enabled</p>
           </div>
           <button className="btn btn__square" onClick={this.savePlexPopular}>
+            Save
+          </button>
+        </section>
+        <section>
+          <p className="main-title mb--2">Allow local login</p>
+          <p className="description">
+            Allow login with local accounts as well as using your Plex account
+          </p>
+          <div className="checkbox-wrap mb--2">
+            <input
+              type="checkbox"
+              name="localLogin"
+              checked={this.state.localLogin}
+              onChange={this.inputChange}
+            />
+            <p>Enabled</p>
+          </div>
+          <button className="btn btn__square" onClick={this.saveLocalLogin}>
             Save
           </button>
         </section>
