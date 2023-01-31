@@ -331,6 +331,7 @@ class Main {
         fanartApi: "ee409f6fb0c5cd2352e7a454d3f580d4",
         base_path: "",
         plexPopular: true,
+        localLogin: true,
       };
       try {
         await this.createConfig(JSON.stringify(configData, null, 2));
