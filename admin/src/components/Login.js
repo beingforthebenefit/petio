@@ -4,6 +4,9 @@ import User from "../data/User";
 import Plex from "../data/Plex";
 import pjson from "../../package.json";
 import { ReactComponent as TmdbLogo } from "../assets/svg/tmdb.svg";
+require("dotenv/config");
+
+const getConfig = require("./util/config");
 
 const popupCenter = (url, title, w, h) => {
   // Fixes dual-screen position | credit Tautulli
@@ -192,73 +195,121 @@ class Login extends React.Component {
       });
     }
   }
-
+  
   render() {
-    return (
-      <div className="login-wrap">
-        {!this.state.loading ? (
-          <>
-            <div className="login--inner">
-              <h1 className="logo">
+    const config = getConfig();
+
+    if (config.loginLocal) {
+      return (
+        <div className="login-wrap">
+          {!this.state.loading ? (
+            <>
+              <div className="login--inner">
+                <h1 className="logo">
                 Pet<span>io</span>
-              </h1>
-              <p className="main-title">Login Admin</p>
-              <form onSubmit={this.loginForm} autoComplete="on">
-                <p style={{ marginBottom: "5px" }}>Username / Email</p>
-                <input
-                  type="text"
-                  name="username"
-                  value={this.state.username}
-                  onChange={this.inputChange}
-                  autoComplete="username"
-                />
+                </h1>
+                <p className="main-title">Login Admin</p>
+                <form onSubmit={this.loginForm} autoComplete="on">
+                  <p style={{ marginBottom: "5px" }}>Username / Email</p>
+                  <input
+                    type="text"
+                    name="username"
+                    value={this.state.username}
+                    onChange={this.inputChange}
+                    autoComplete="username"
+                  />
 
-                <p style={{ marginBottom: "5px" }}>Password</p>
-                <input
-                  type="password"
-                  name="password"
-                  value={this.state.password}
-                  onChange={this.inputChange}
-                  autoComplete="current-password"
-                />
+                  <p style={{ marginBottom: "5px" }}>Password</p>
+                  <input
+                    type="password"
+                    name="password"
+                    value={this.state.password}
+                    onChange={this.inputChange}
+                    autoComplete="current-password"
+                  />
 
-                <button className="btn btn__square btn__full">Login</button>
-                <div className="login--inner--divide">
-                  <p>or</p>
-                </div>
-                <div>
-                  <button
-                    className="btn btn__square btn__full"
-                    onClick={this.loginOauth}
-                  >
-                    Login with Plex
-                  </button>
-                </div>
-              </form>
+                  <button className="btn btn__square btn__full">Login</button>
+                  <div className="login--inner--divide">
+                    <p>or</p>
+                  </div>
+                  <div>
+                    <button
+                      className="btn btn__square btn__full"
+                      onClick={this.loginOauth}
+                    >
+                      Login with Plex
+                    </button>
+                  </div>
+                </form>
+              </div>
+              <div className="credits">
+                <a href="https://fanart.tv/" target="_blank" rel="noreferrer">
+                  <p>
+                    <strong>FAN</strong>ART<span>.TV</span>
+                  </p>
+                </a>
+                <a
+                  href="https://www.themoviedb.org/"
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  <TmdbLogo />
+                </a>
+              </div>
+              <p className="powered-by">Petio Admin build {pjson.version}</p>
+            </>
+          ) : (
+            <div className="spinner">
+              <Spinner />
             </div>
-            <div className="credits">
-              <a href="https://fanart.tv/" target="_blank" rel="noreferrer">
-                <p>
-                  <strong>FAN</strong>ART<span>.TV</span>
-                </p>
-              </a>
-              <a
-                href="https://www.themoviedb.org/"
-                target="_blank"
-                rel="noreferrer"
-              >
-                <TmdbLogo />
-              </a>
+          )}
+        </div>
+      );
+    } else {
+      return (
+        <div className="login-wrap">
+          {!this.state.loading ? (
+            <>
+              <div className="login--inner">
+                <h1 className="logo">
+                  Pet<span>io</span>
+                </h1>
+                <p className="main-title">Login Admin</p>
+                <form onSubmit={this.loginForm} autoComplete="on">
+                  <div>
+                    <button
+                      className="btn btn__square btn__full"
+                      onClick={this.loginOauth}
+                    >
+                      Login with Plex
+                    </button>
+                  </div>
+                </form>
+              </div>
+              <div className="credits">
+                <a href="https://fanart.tv/" target="_blank" rel="noreferrer">
+                  <p>
+                    <strong>FAN</strong>ART<span>.TV</span>
+                  </p>
+                </a>
+                <a
+                  href="https://www.themoviedb.org/"
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  <TmdbLogo />
+                </a>
+              </div>
+              <p className="powered-by">Petio Admin build {pjson.version}</p>
+            </>
+          ) : (
+            <div className="spinner">
+              <Spinner />
             </div>
-            <p className="powered-by">Petio Admin build {pjson.version}</p>
-          </>
-        ) : (
-          <div className="spinner">
-            <Spinner />
-          </div>
-        )}
-      </div>
-    );
+          )}
+        </div>
+      );
+    }
   }
 }
 
